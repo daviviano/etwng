@@ -143,6 +143,18 @@ Dir.foreach(input_dir) do |faction|
         puts "  An error occurred processing #{xml_path}: #{e.message}"
       end
     end
+
+    # Aggregate armies if we just processed the army directory
+    if sub_dir == "army"
+      final_file = File.join(target_output_dir, "army_final.json")
+      puts "  Aggregating armies for #{faction}..." if @verbose
+      aggregate_args = ["ruby", "armyxml2json.rb"]
+      aggregate_args << "--verbose" if @verbose
+      aggregate_args << "--aggregate"
+      aggregate_args << target_output_dir
+      aggregate_args << final_file
+      system(*aggregate_args)
+    end
   end
 end
 
