@@ -165,9 +165,12 @@ class EsfParser
   end
 end
 
+require 'set'
+
 def aggregate_armies(source_dir, target_file, verbose = false)
   return unless Dir.exist?(source_dir)
   target_name = File.basename(target_file)
+  seen_ids = Set.new
   
   groups = Dir.children(source_dir).each_with_object([]) do |file, list|
     next unless file.end_with?('.json') && file != target_name
@@ -180,10 +183,20 @@ def aggregate_armies(source_dir, target_file, verbose = false)
         # Aggregate both 'army' and 'navy' types
         ['army', 'navy'].each do |type|
           if data = content['army_array'][type]
-            if data.is_a?(Array)
-              data.each { |item| list << { "file" => file, "type" => type }.merge(item) }
-            else
-              list << { "file" => file, "type" => type }.merge(data)
+            items = data.is_a?(Array) ? data : [data]
+            
+            items.each do |item|
+              army_id = item.dig('military_force', 'army_id')
+              
+              if army_id
+                if seen_ids.include?(army_id)
+                  puts "  Skipping duplicate army_id: #{army_id} in #{file}" if verbose
+                  next
+                end
+                seen_ids << army_id
+              end
+              
+              list << { "file" => file, "type" => type }.merge(item)
             end
           end
         end
