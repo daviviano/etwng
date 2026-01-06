@@ -56,26 +56,27 @@ out_dir = ARGV[1] + "/raw"
 if File.exist?(out_dir)
   # Print error to standard error and exit if output directory exists.
   STDERR.puts "#{out_dir} already exists"
-  exit 1
 end
 
-# Print input and output paths if verbose mode is enabled.
-puts "Input file: #{in_file.path}" if verbose
-puts "Output directory: #{out_dir}" if verbose
+unless File.exist?(out_dir)
+  # Print input and output paths if verbose mode is enabled.
+  puts "Input file: #{in_file.path}" if verbose
+  puts "Output directory: #{out_dir}" if verbose
 
-# Create a new EsfConverter instance with the input file and output directory.
-esf_converter = EsfConverter.new(in_file, out_dir)
+  # Create a new EsfConverter instance with the input file and output directory.
+  esf_converter = EsfConverter.new(in_file, out_dir)
 
-# Start a progress bar thread if verbose mode is enabled.
-# The EsfConverter is expected to provide this thread.
-thr = esf_converter.progressbar_thread if verbose
+  # Start a progress bar thread if verbose mode is enabled.
+  # The EsfConverter is expected to provide this thread.
+  thr = esf_converter.progressbar_thread if verbose
 
-# Perform the conversion from ESF to XML.
-esf_converter.convert!
-thr.join if verbose && thr
+  # Perform the conversion from ESF to XML.
+  esf_converter.convert!
+  thr.join if verbose && thr
 
-# Report any semantic failures if semantic mode is enabled.
-esf_converter.report_semantic_failures! if semantic
+  # Report any semantic failures if semantic mode is enabled.
+  esf_converter.report_semantic_failures! if semantic
+end
 
 
 
@@ -85,7 +86,7 @@ esf_converter.report_semantic_failures! if semantic
 ####
 
 
-out_dir_cleaned = ARGV[1] + "/cleaned/empire"
+out_dir_cleaned = ARGV[1] + "/xml"
 # Ensure output directory exists, creating it if necessary.
 FileUtils.mkdir_p(out_dir_cleaned)
 

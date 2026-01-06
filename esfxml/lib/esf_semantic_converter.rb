@@ -1352,7 +1352,7 @@ end
       [:s, 25] => "Region Culture For Types Of Buildings",
       [:s, 37] => "Latest Constuction",
       [:u, 38] => "One Of These 5/10/15/20/25/30/40 Amount Of Prestige When Conquered",
-      [:u, 39] => "Region Array. From Top To Bottom. 1st 62 Regions 881206575. 2nd 15 Regions 1771634741. 3rd 32 Regions 1928099569. 4th 28 Regions 688200897. Why????"
+      [:u, 39] => "Region Array. From Top To Bottom. 1st 62 Regions 881206575. 2nd 15 Regions 1771634741. 3rd 32 Regions 1928099569. 4th 28 Regions 688200897."
     )
   end
 
